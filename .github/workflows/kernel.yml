@@ -21,7 +21,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install Deps
         run: |
-          sudo apt-get install wget -y && sudo wget https://raw.githubusercontent.com/akhilnarang/scripts/master/setup/android_build_env.sh && bash android*
+          sudo apt-get install wget -y && sudo wget https://raw.githubusercontent.com/akhilnarang/scripts/master/setup/android_build_env.sh && sudo bash android*
       # Runs a set of commands using the runners shell
       - name: Sync Repo
         run: |
@@ -31,5 +31,7 @@ jobs:
         run: |
           cd kernel && sudo bash build.sh
       - name: Upload
-        run:  cd kernel && curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip
+        run:  cd kernel && export URL = $(curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip)
+      - name: Update through telegram
+        run: CHAT = ${{ secrets.CHAT_ID }} && API = ${{ secrets.TELEGRAM_API }} && curl -s "https://api.telegram.org/bot${API}/sendmessage" --data "text=$URL&chat_id=${CHAT}"
           
