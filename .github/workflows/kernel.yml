@@ -31,7 +31,7 @@ jobs:
         run: |
           cd kernel && sudo bash build.sh
       - name: Upload
-        run:  cd kernel && export URL = $(curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip)
+        run:  cd kernel && curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip
       - name: Update through telegram
-        run: CHAT = ${{ secrets.CHAT_ID }} && API = ${{ secrets.TELEGRAM_API }} && curl -s "https://api.telegram.org/bot${API}/sendmessage" --data "text=$URL&chat_id=${CHAT}"
+        run: CHAT = ${{ secrets.CHAT_ID }} && API = ${{ secrets.TELEGRAM_API }} && curl -s "https://api.telegram.org/bot${API}/sendmessage" --data "text=$(curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip)&chat_id=${CHAT}"
           
