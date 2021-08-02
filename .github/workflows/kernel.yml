@@ -20,31 +20,39 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Install Deps
+        if: ${{ always() }}
         run: |
           sudo apt-get install wget -y && sudo wget https://raw.githubusercontent.com/akhilnarang/scripts/master/setup/android_build_env.sh && sudo bash android*
       # Runs a set of commands using the runners shell
       - name: Checkout Repo
+        if: ${{ always() }}
         uses: actions/checkout@v2
           
       - name: Checkout Repo
+        if: ${{ always() }}
         uses: actions/checkout@v2
         with:
           repository: ArrowOS-Devices/android_kernel_xiaomi_ginkgo
           path: kernel
           
       - name: Build
+        if: ${{ always() }}
         run: cd kernel && sudo bash build.sh
         
       - name: Upload
+        if: ${{ always() }}
         run: ls && cd kernel && curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip
       
-      - name: copy it out
+      - name: copy zip out
+        if: ${{ always() }}
         run: cp kernel/*.zip . 
         
       - name: remove kernel folder
-        run: rm -rf kernel
+        if: ${{ always() }}
+        run: sudo rm -rf kernel
       
       - name: push
+        if: ${{ always() }}
         uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
         with:
           author_name: Ashwin Kernel Builder
