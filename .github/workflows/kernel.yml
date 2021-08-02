@@ -25,13 +25,33 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Checkout Repo
         uses: actions/checkout@v2
+          
+      - name: Checkout Repo
+        uses: actions/checkout@v2
         with:
           repository: ArrowOS-Devices/android_kernel_xiaomi_ginkgo
+          path: kernel
           
       - name: Build
-        run: sudo bash build.sh
+        run: cd kernel && sudo bash build.sh
         
       - name: Upload
-        run:  curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip
-     
+        run: ls && cd kernel && curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip
+      
+      - name: copy it out
+        run: cp kernel/*.zip . 
+        
+      - name: remove kernel folder
+        run: rm -rf kernel
+      
+      - name: push
+        uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
+        with:
+          author_name: Ashwin Kernel Builder
+          author_email: <>
+          default_author: github_actor
+
+          # The message for the commit
+          # Default: 'Commit from GitHub Actions (name of the workflow)'
+          message: 'Kernel Built [BOT]'
           
