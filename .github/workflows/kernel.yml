@@ -50,15 +50,8 @@ jobs:
       - name: remove kernel folder
         if: ${{ always() }}
         run: sudo rm -rf kernel
-      
-      - name: push
-        if: ${{ always() }}
-        run: |
-          git config --global user.email "<>"
-          git config --global user.name "Ashwin Kernel Builder [BOT]"
-          git fetch
-          git pull
-          git add .
-          git commit -m "Kernel Builder [BOT]"
-          git push origin master
           
+      - name: Post a Github Release
+        run: hub release create -a *.zip -m 'Kernel Build' 4.14.242
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
