@@ -53,6 +53,6 @@ jobs:
         run: sudo rm -rf kernel
           
       - name: Post a Github Release
-        run: hub release create -a *.zip -m 'Kernel Build' 4.14.243
+        run: hub release create -a *.zip -m 'Kernel Build' $(date +%s)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
