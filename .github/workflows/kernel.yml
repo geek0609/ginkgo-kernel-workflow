@@ -1,53 +1,39 @@
-name: Kernel Compile
+name: Ginkgo Kernel Compile
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
-  
-  # Triggers the workflow thru GitHub API
-  repository_dispatch:
-  
-  # Allows you to run this workflow manually from the Actions tab
+  repository_dispatch: 
   workflow_dispatch:
-    
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  ginkgo_kernel_build:
     runs-on: self-hosted
     steps:
-      # Runs a set of commands using the runners shell
+
+      - name: Cleanup Current Directory
+        if: ${{ always() }}
+        run: rm -rf *
+        
       - name: Checkout Repo
         if: ${{ always() }}
-        uses: actions/checkout@v2
+        run: git clone git@github.com:PixelOS-Automated-Builds/ginkgo-kernel-workflow.git . 
           
-      - name: Checkout Repo
+      - name: Clone Kernel
         if: ${{ always() }}
-        uses: actions/checkout@v2
-        with:
-          repository: geek0609/kernel_xiaomi_ginkgo
-          path: kernel
-          fetch-depth: 1
+        run: git clone git@github.com:geek0609/kernel_xiaomi_ginkgo.git --depth=1 -b 11.0 kernel 
           
-      - name: Build
+      - name: Build Kernel
         if: ${{ always() }}
         run: cd kernel && bash build.sh
-        
-      - name: Upload
-        if: ${{ always() }}
-        run: ls && cd kernel && curl --upload-file ./QuicksilveRV2-ginkgo*.zip http://transfer.sh/kernel.zip
       
       - name: copy zip out
         if: ${{ always() }}
         run: cp kernel/*.zip . 
-        
-      - name: remove kernel folder
-        if: ${{ always() }}
-        run: sudo rm -rf kernel
           
       - name: Post a Github Release
         run: hub release create -a *.zip -m 'Kernel Build' $(date +%s)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          
+      - name: Remove Work Directory
+        if: ${{ always() }}
+        run: rm -rf $GITHUB_WORKSPACE
