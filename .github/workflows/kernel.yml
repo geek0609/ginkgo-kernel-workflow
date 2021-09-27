@@ -18,16 +18,6 @@ jobs:
     # The type of runner that the job will run on
     runs-on: self-hosted
     steps:
-
-      # Runs a single command using the runners shell
-      - name: Install Deps
-        if: ${{ always() }}
-        run: |
-          sudo apt-get install wget -y && sudo wget https://raw.githubusercontent.com/akhilnarang/scripts/master/setup/android_build_env.sh && sudo bash android*
-          
-      - name: run update
-        run: sudo apt-get update && sudo apt-get install libc6 -y
-          
       # Runs a set of commands using the runners shell
       - name: Checkout Repo
         if: ${{ always() }}
@@ -43,7 +33,7 @@ jobs:
           
       - name: Build
         if: ${{ always() }}
-        run: cd kernel && sudo bash build.sh
+        run: cd kernel && bash build.sh
         
       - name: Upload
         if: ${{ always() }}
