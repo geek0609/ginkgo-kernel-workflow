@@ -33,7 +33,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/checkout@v2
         with:
-          repository: ArrowOS-Devices/android_kernel_xiaomi_ginkgo
+          repository: geek0609/kernel_xiaomi_ginkgo
           path: kernel
           
       - name: Build
